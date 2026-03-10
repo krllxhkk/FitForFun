@@ -190,3 +190,43 @@ footer {
     }
 
 }
+
+.search-form {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.search-form input {
+    padding: 14px;
+    width: 400px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #1e1e1e;
+    color: white;
+    font-size: 16px;
+}
+
+.search-form input::placeholder {
+    color: #aaa;
+}
+
+.search-form button {
+    padding: 14px 20px;
+    margin-left: 8px;
+    background: linear-gradient(45deg, orange, #ff8800);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    transform: scale(1.05);
+}
+
+.geen-lessen {
+    color: #ff8800;
+    font-weight: bold;
+    font-size: 24px;
+    margin-top: 25px;
+}

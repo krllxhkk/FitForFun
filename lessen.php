@@ -2,12 +2,26 @@
 include "database.php";
 include "header.php";
 
-// lessen ophalen uit database
-$stmt = $pdo->query("SELECT * FROM lessen");
-$lessen = $stmt->fetchAll();
+$zoek = $_GET['zoek'] ?? '';
+
+if($zoek){
+    $stmt = $pdo->prepare("SELECT * FROM lessen WHERE naam LIKE ?");
+    $stmt->execute(["%$zoek%"]);
+} else {
+    $stmt = $pdo->query("SELECT * FROM lessen");
+}
+
+$lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <section class="lessen">
+
+<form method="GET" class="search-form">
+    <input type="text" name="zoek" placeholder="Zoek op les naam..."
+    value="<?= htmlspecialchars($_GET['zoek'] ?? '') ?>">
+    <button type="submit">Zoeken</button>
+</form>
+
 
 <h2>Aankomende Lessen</h2>
 <p>Bekijk hieronder onze geplande fitnesslessen en reserveer jouw plek.</p>
@@ -38,8 +52,9 @@ $lessen = $stmt->fetchAll();
 
 <?php else: ?>
 
-<p>Geen lessen beschikbaar.</p>
-
+<p class="geen-lessen">
+Geen lessen gevonden voor "<?= htmlspecialchars($zoek) ?>"
+</p>
 <?php endif; ?>
 
 </div>
