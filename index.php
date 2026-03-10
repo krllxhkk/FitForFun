@@ -2,16 +2,16 @@
 include "database.php";
 include "header.php";
 
-$stmt = $pdo->query("SELECT * FROM Les WHERE Isactief = 1 ORDER BY Datum ASC");
+$stmt = $pdo->query("SELECT * FROM lessen ORDER BY datum ASC");
 $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <section class="hero">
     <div class="hero-content">
         <h2>Train Hard. Feel Strong. 🔥</h2>
-        <p>Welkom bij <strong>FitForFun</strong> – de plek waar motivatie, energie en resultaat samenkomen.</p>
-        <p>Verbeter je conditie, bouw kracht op en train samen met een community die jou motiveert.</p>
-        <a href="#lessen" class="btn">Bekijk Onze Lessen</a>
+        <p>Welkom bij <strong>FitForFun</strong> – de plek waar motivatie, energie en resultaat samenkomen</p>
+        <p>Verbeter je conditie, bouw kracht op en train samen met een community die jou motiveert</p>
+        <a href="lessen.php" class="btn">Bekijk Onze Lessen</a>
     </div>
 </section>
 
@@ -56,40 +56,5 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </section>
 
-<section id="lessen" class="lessen">
-    <h2>Aankomende Lessen</h2>
-
-    <p>Bekijk hieronder onze geplande fitnesslessen en reserveer jouw plek.</p>
-
-    <div class="lesson-container">
-        <?php foreach ($lessen as $les): ?>
-            <div class="lesson-card">
-                <h3><?= htmlspecialchars($les['Naam']) ?></h3>
-
-                <p>
-                    <strong>📅 Datum:</strong>
-                    <?= date("d-m-Y", strtotime($les['Datum'])) ?>
-                </p>
-
-                <p>
-                    <strong>🕒 Tijd:</strong>
-                    <?= date("H:i", strtotime($les['Tijd'])) ?>
-                </p>
-
-                <p>
-                    <strong>💶 Prijs:</strong>
-                    €<?= number_format($les['Prijs'], 2) ?>
-                </p>
-
-                <p class="status">
-                    <?= htmlspecialchars($les['Beschikbaarheid']) ?>
-                </p>
-
-                <a href="#" class="btn">Reserveer</a>
-
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
 
 <?php include "footer.php"; ?>

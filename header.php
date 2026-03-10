@@ -12,7 +12,7 @@
     <h1>💪 FitForFun</h1>
     <nav>
         <a href="index.php">Home</a>
-        <a href="#">Lessen</a>
-        <a href="#">Inloggen</a>
+        <a href="lessen.php">Lessen</a>
+        <a href="inloggen.php">Inloggen</a>
     </nav>
 </header>
