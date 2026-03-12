@@ -17,11 +17,10 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section class="lessen">
 
 <form method="GET" class="search-form">
-    <input type="text" name="zoek" placeholder="Zoek op les naam..."
-    value="<?= htmlspecialchars($_GET['zoek'] ?? '') ?>">
-    <button type="submit">Zoeken</button>
+<input type="text" name="zoek" placeholder="Zoek op les naam..."
+value="<?= htmlspecialchars($_GET['zoek'] ?? '') ?>">
+<button type="submit">Zoeken</button>
 </form>
-
 
 <h2>Aankomende Lessen</h2>
 <p>Bekijk hieronder onze geplande fitnesslessen en reserveer jouw plek.</p>
@@ -34,11 +33,13 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="lesson-card">
 
+<img src="<?= htmlspecialchars($les['foto']) ?>" class="lesson-foto">
+
 <h3><?= htmlspecialchars($les['naam']) ?></h3>
 
-<p>📅 Datum: <?= htmlspecialchars($les['datum']) ?></p>
+<p>📅 Datum: <?= date("d-m-Y", strtotime($les['datum'])) ?></p>
 
-<p>⏰ Tijd: <?= htmlspecialchars($les['tijd']) ?></p>
+<p>⏰ Tijd: <?= date("H:i", strtotime($les['tijd'])) ?></p>
 
 <p>💳 Prijs: €<?= number_format($les['prijs'],2) ?></p>
 
@@ -55,6 +56,7 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <p class="geen-lessen">
 Geen lessen gevonden voor "<?= htmlspecialchars($zoek) ?>"
 </p>
+
 <?php endif; ?>
 
 </div>
