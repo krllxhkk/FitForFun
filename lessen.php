@@ -37,9 +37,9 @@ value="<?= htmlspecialchars($_GET['zoek'] ?? '') ?>">
 
 <h3><?= htmlspecialchars($les['naam']) ?></h3>
 
-<p>📅 Datum: <?= htmlspecialchars($les['datum']) ?></p>
+<p>📅 Datum: <?= date("d-m-Y", strtotime($les['datum'])) ?></p>
 
-<p>⏰ Tijd: <?= htmlspecialchars($les['tijd']) ?></p>
+<p>⏰ Tijd: <?= date("H:i", strtotime($les['tijd'])) ?></p>
 
 <p>💳 Prijs: €<?= number_format($les['prijs'],2) ?></p>
 

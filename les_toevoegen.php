@@ -1,7 +1,8 @@
 <?php
 include "database.php";
+include "header.php";
 
-if($_POST){
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 $naam = $_POST['naam'];
 $datum = $_POST['datum'];
@@ -9,29 +10,36 @@ $tijd = $_POST['tijd'];
 $prijs = $_POST['prijs'];
 
 $sql = "INSERT INTO lessen (naam, datum, tijd, prijs) VALUES (?, ?, ?, ?)";
-$stmt= $pdo->prepare($sql);
-$stmt->execute([$naam,$datum,$tijd,$prijs]);
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$naam, $datum, $tijd, $prijs]);
 
 header("Location: lessen_overzicht.php");
+exit;
 }
 ?>
 
-<h2>Nieuwe Les</h2>
+<section class="form-pagina">
 
-<form method="POST">
+<h2>➕ Nieuwe Les Toevoegen</h2>
 
-Naam
-<input type="text" name="naam">
+<form method="POST" class="les-form">
 
-Datum
-<input type="date" name="datum">
+<label>Les naam</label>
+<input type="text" name="naam" required>
 
-Tijd
-<input type="time" name="tijd">
+<label>Datum</label>
+<input type="date" name="datum" required>
 
-Prijs
-<input type="number" name="prijs">
+<label>Tijd</label>
+<input type="time" name="tijd" required>
 
-<button type="submit">Opslaan</button>
+<label>Prijs</label>
+<input type="number" step="0.01" name="prijs" required>
+
+<button type="submit" class="btn">Les opslaan</button>
 
 </form>
+
+</section>
+
+<?php include "footer.php"; ?>

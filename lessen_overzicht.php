@@ -8,9 +8,12 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <h2 style="text-align:center;">Lessen Overzicht</h2>
 
+<div style="text-align:center; margin-top:20px;">
 <a href="les_toevoegen.php" class="btn">➕ Nieuwe les toevoegen</a>
+</div>
 
 <table class="lessen-tabel">
+
 <tr>
 <th>Naam</th>
 <th>Datum</th>
@@ -22,10 +25,14 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php foreach($lessen as $les): ?>
 
 <tr>
-<td><?= $les['naam'] ?></td>
-<td><?= $les['datum'] ?></td>
-<td><?= $les['tijd'] ?></td>
-<td>€<?= $les['prijs'] ?></td>
+
+<td><?= htmlspecialchars($les['naam']) ?></td>
+
+<td><?= date("d-m-Y", strtotime($les['datum'])) ?></td>
+
+<td><?= date("H:i", strtotime($les['tijd'])) ?></td>
+
+<td>€<?= number_format($les['prijs'],2) ?></td>
 
 <td class="actie">
 
@@ -34,7 +41,7 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <a class="verwijderen" href="les_verwijderen.php?id=<?= $les['id'] ?>">Verwijderen</a>
 
 </td>
- 
+
 </tr>
 
 <?php endforeach; ?>
