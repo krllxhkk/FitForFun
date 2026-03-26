@@ -4,17 +4,17 @@ include "header.php";
 
 $zoek = $_GET['zoek'] ?? '';
 
-if($zoek){
-    $stmt = $pdo->prepare("SELECT * FROM lessen WHERE naam LIKE ?");
-    $stmt->execute(["%$zoek%"]);
-} else {
-    $stmt = $pdo->query("SELECT * FROM lessen");
-}
+ if($zoek){
+     $stmt = $pdo->prepare("SELECT * FROM lessen WHERE titel LIKE ?");
+     $stmt->execute(["%$zoek%"]);
+ } else {
+     $stmt = $pdo->query("SELECT * FROM lessen");
+ }
 
-$lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  ?>
 
-<section class="lessen">
+  <section class="lessen">
 
 <form method="GET" class="search-form">
     <input type="text" name="zoek" placeholder="Zoek op les naam..."
@@ -61,4 +61,4 @@ Geen lessen gevonden voor "<?= htmlspecialchars($zoek) ?>"
 
 </section>
 
-<?php include "footer.php"; ?>
+<?php include "footer.php"; ?>  
