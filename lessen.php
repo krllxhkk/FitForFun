@@ -10,6 +10,15 @@ $prijs = $_GET['prijs'] ?? '';
 $sql = "SELECT * FROM lessen WHERE 1";
 $params = [];
 
+ if($zoek){
+     $stmt = $pdo->prepare("SELECT * FROM lessen WHERE titel LIKE ?");
+     $stmt->execute(["%$zoek%"]);
+ } else {
+     $stmt = $pdo->query("SELECT * FROM lessen");
+ }
+
+ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  ?>
 if($zoek){
     $sql .= " AND naam LIKE ?";
     $params[] = "%$zoek%";
@@ -26,7 +35,7 @@ $stmt->execute($params);
 $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<section class="lessen">
+  <section class="lessen">
 
 <!-- ZOEK FORM -->
 <form method="GET" class="search-form">
@@ -82,4 +91,4 @@ Geen lessen gevonden
 
 </section>
 
-<?php include "footer.php"; ?>
+<?php include "footer.php"; ?>  

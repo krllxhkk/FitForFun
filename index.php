@@ -33,6 +33,8 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </p>
 </section>
 
+</section>
+
 <section class="about">
     <h2>Wat bieden wij?</h2>
 
@@ -51,6 +53,37 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="lesson-card">
             <h3>🏆 Professionele trainers</h3>
             <p>Onze trainers begeleiden je en helpen je jouw fitnessdoelen te bereiken.</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="about">
+    <h2>Beheer</h2>
+
+    <p>
+        Via onderstaande pagina's kun je leden en medewerkers beheren
+        en het aantal leden per periode bekijken.
+    </p>
+
+    <div class="lesson-container">
+
+        <div class="lesson-card">
+            <h3>👥 Leden toevoegen</h3>
+            <p>Voeg nieuwe leden toe en bekijk het volledige ledenoverzicht.</p>
+            <a href="public/index.php?url=leden/index" class="btn">Ga naar leden</a>
+        </div>
+
+        <div class="lesson-card">
+            <h3>🧑‍💼 Medewerkers toevoegen</h3>
+            <p>Voeg nieuwe medewerkers toe en beheer het medewerkersoverzicht.</p>
+            <a href="public/index.php?url=medewerker/index" class="btn">Ga naar medewerkers</a>
+        </div>
+
+        <div class="lesson-card">
+            <h3>📊 Leden per periode</h3>
+            <p>Bekijk hoeveel leden er in een bepaalde periode zijn toegevoegd.</p>
+            <a href="public/index.php?url=leden/overzicht" class="btn">Bekijk overzicht</a>
         </div>
 
     </div>
