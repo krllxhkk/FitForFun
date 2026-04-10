@@ -5,80 +5,116 @@ include "header.php";
 /* ZOEK VARIABELEN */
 $zoek = $_GET['zoek'] ?? '';
 $prijs = $_GET['prijs'] ?? '';
+$datum = $_GET['datum'] ?? '';
+$fout = '';
 
-/* QUERY OPBOUWEN */
-$sql = "SELECT * FROM lessen WHERE 1";
 $params = [];
+$lessen = [];
 
-if($zoek){
-    $sql .= " AND naam LIKE ?";
-    $params[] = "%$zoek%";
+/* DATUM CHECK */
+$today = date("Y-m-d");
+
+if ($datum && $datum < $today) {
+    $fout = "Je kan niet zoeken in het verleden!";
 }
 
-if($prijs){
-    $sql .= " AND prijs <= ?";
-    $params[] = $prijs;
+/* QUERY ALLEEN ALS GEEN FOUT */
+if (!$fout) {
+
+    try {
+        $sql = "SELECT * FROM lessen WHERE 1";
+        // $sql = "SELECT * FROM bestaat_niet";
+
+        if ($zoek) {
+            $sql .= " AND naam LIKE ?";
+            $params[] = "%$zoek%";
+        }
+
+        if ($prijs) {
+            $sql .= " AND prijs <= ?";
+            $params[] = $prijs;
+        }
+
+        if ($datum) {
+            $sql .= " AND datum = ?";
+            $params[] = $datum;
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+
+        $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $fout = "Er is iets mis gegaan, probeer later opnieuw.";
+    }
 }
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-
-$lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <section class="lessen">
 
-<!-- ZOEK FORM -->
-<form method="GET" class="search-form">
+    <!-- 🔴 MOOIE FOUTMELDING -->
+    <?php if ($fout): ?>
+        <div style="background:#e74c3c; padding:12px; border-radius:8px; color:white; margin-bottom:15px;">
+            ⚠️ <?= $fout ?>
+        </div>
+    <?php endif; ?>
 
-<input type="text" name="zoek" placeholder="Zoek op les naam..."
-value="<?= htmlspecialchars($zoek) ?>">
+    <!-- ZOEK FORM -->
+    <form method="GET" class="search-form">
 
-<input type="number" name="prijs" placeholder="Max prijs..."
-value="<?= htmlspecialchars($prijs) ?>">
+        <input type="text" name="zoek" placeholder="Zoek op les naam..."
+            value="<?= htmlspecialchars($zoek) ?>">
 
-<button type="submit">Zoeken</button>
+        <input type="number" name="prijs" placeholder="Max prijs..."
+            value="<?= htmlspecialchars($prijs) ?>">
 
-</form>
+        <input type="date" name="datum"
+            value="<?= htmlspecialchars($datum) ?>">
 
-<h2>Aankomende Lessen</h2>
-<p>Bekijk hieronder onze geplande fitnesslessen en reserveer jouw plek.</p>
+        <button type="submit">Zoeken</button>
 
-<div class="lesson-container">
+    </form>
 
-<?php if(count($lessen) > 0): ?>
+    <h2>Aankomende Lessen</h2>
+    <p>Bekijk hieronder onze geplande fitnesslessen en reserveer jouw plek.</p>
 
-<?php foreach($lessen as $les): ?>
+    <div class="lesson-container">
 
-<div class="lesson-card">
+        <!-- ✅ RESULTATEN -->
+        <?php if (!$fout && count($lessen) > 0): ?>
 
-<img src="<?= htmlspecialchars($les['foto']) ?>" class="lesson-foto">
+            <?php foreach ($lessen as $les): ?>
 
-<h3><?= htmlspecialchars($les['naam']) ?></h3>
+                <div class="lesson-card">
 
-<p>📅 Datum: <?= date("d-m-Y", strtotime($les['datum'])) ?></p>
+                    <img src="<?= htmlspecialchars($les['foto']) ?>" class="lesson-foto">
 
-<p>⏰ Tijd: <?= date("H:i", strtotime($les['tijd'])) ?></p>
+                    <h3><?= htmlspecialchars($les['naam']) ?></h3>
 
-<p>💳 Prijs: €<?= number_format($les['prijs'],2) ?></p>
+                    <p>📅 Datum: <?= date("d-m-Y", strtotime($les['datum'])) ?></p>
 
-<p><?= htmlspecialchars($les['beschikbaarheid']) ?></p>
+                    <p>⏰ Tijd: <?= date("H:i", strtotime($les['tijd'])) ?></p>
 
-<button class="btn">Reserveer</button>
+                    <p>💳 Prijs: €<?= number_format($les['prijs'], 2) ?></p>
 
-</div>
+                    <p><?= htmlspecialchars($les['beschikbaarheid']) ?></p>
 
-<?php endforeach; ?>
+                    <button class="btn">Reserveer</button>
 
-<?php else: ?>
+                </div>
 
-<p class="geen-lessen">
-Geen lessen gevonden
-</p>
+            <?php endforeach; ?>
 
-<?php endif; ?>
+            <!-- ❌ GEEN RESULTAAT -->
+        <?php elseif (!$fout): ?>
 
-</div>
+            <p class="geen-lessen">
+                Geen lessen gevonden
+            </p>
+
+        <?php endif; ?>
+
+    </div>
 
 </section>
 

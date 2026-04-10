@@ -9,42 +9,45 @@ $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <h2 style="text-align:center;">Lessen Overzicht</h2>
 
 <div style="text-align:center; margin-top:20px;">
-<a href="les_toevoegen.php" class="btn">➕ Nieuwe les toevoegen</a>
+    <a href="les_toevoegen.php" class="btn">➕ Nieuwe les toevoegen</a>
 </div>
 
 <table class="lessen-tabel">
 
-<tr>
-<th>Naam</th>
-<th>Datum</th>
-<th>Tijd</th>
-<th>Prijs</th>
-<th>Acties</th>
-</tr>
+    <tr>
+        <th>Naam</th>
+        <th>Datum</th>
+        <th>Tijd</th>
+        <th>Prijs</th>
+        <th>Acties</th>
+    </tr>
 
-<?php foreach($lessen as $les): ?>
+    <?php foreach ($lessen as $les): ?>
 
-<tr>
+        <tr>
 
-<td><?= htmlspecialchars($les['naam']) ?></td>
+            <td><?= htmlspecialchars($les['naam']) ?></td>
 
-<td><?= date("d-m-Y", strtotime($les['datum'])) ?></td>
+            <td><?= date("d-m-Y", strtotime($les['datum'])) ?></td>
 
-<td><?= date("H:i", strtotime($les['tijd'])) ?></td>
+            <td><?= date("H:i", strtotime($les['tijd'])) ?></td>
 
-<td>€<?= number_format($les['prijs'],2) ?></td>
+            <td>€<?= number_format($les['prijs'], 2) ?></td>
 
-<td class="actie">
+            <td class="actie">
 
-<a class="bewerken" href="les_bewerken.php?id=<?= $les['id'] ?>">Bewerken</a>
+                <a class="bewerken" href="les_bewerken.php?id=<?= $les['id'] ?>">Bewerken</a>
 
-<a class="verwijderen" href="les_verwijderen.php?id=<?= $les['id'] ?>">Verwijderen</a>
+                <a class="verwijderen"
+                    href="les_verwijderen.php?id=<?= $les['id'] ?>"
+                    onclick="return confirm('Weet je zeker dat je wilt verwijderen?')">
+                    Verwijderen
+                </a>
+            </td>
 
-</td>
+        </tr>
 
-</tr>
-
-<?php endforeach; ?>
+    <?php endforeach; ?>
 
 </table>
 

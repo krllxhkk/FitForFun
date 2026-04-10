@@ -466,3 +466,102 @@ footer {
     width: 100%;
     font-size: 16px;
 }
+
+.lesson-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    /* minder ruimte tussen lessen */
+    max-width: 1000px;
+    /* zorgt dat het niet te breed wordt */
+    margin: 0 auto;
+    /* zet alles mooi in het midden */
+}
+
+.lesson-card {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #141414;
+    text-align: center;
+    /* alles netjes in midden */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.lessen p {
+    margin-bottom: 20px;
+}
+
+.lesson-container {
+    margin-top: 10px;
+}
+
+.lesson-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .lesson-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobiel */
+@media (max-width: 600px) {
+    .lesson-container {
+        grid-template-columns: 1fr;
+        padding: 0 15px;
+    }
+}
+
+td:last-child {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* ALGEMENE BUTTON STYLE */
+.actie a {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+/* BEWERKEN (mooi blauw glow) */
+.bewerken {
+    background: rgba(52, 152, 219, 0.15);
+    color: #5dade2;
+    border: 1px solid #3498db;
+}
+
+.bewerken:hover {
+    background: #3498db;
+    color: white;
+    box-shadow: 0 0 10px #3498db;
+}
+
+/* VERWIJDEREN (soft rood, niet hard) */
+.verwijderen {
+    background: rgba(231, 76, 60, 0.15);
+    color: #ff6b6b;
+    border: 1px solid #e74c3c;
+}
+
+.verwijderen:hover {
+    background: #e74c3c;
+    color: white;
+    box-shadow: 0 0 10px #e74c3c;
+}
