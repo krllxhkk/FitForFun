@@ -18,13 +18,14 @@ if ($datum && $datum < $today) {
     $fout = "Je kan niet zoeken in het verleden!";
 }
 
-/* QUERY */
+/* QUERY ALLEEN ALS GEEN FOUT */
 if (!$fout) {
 
     try {
         $sql = "SELECT * FROM lessen WHERE 1";
+        // $sql = "SELECT * FROM bestaat_niet"; // test database error
 
-        // 🔍 zoeken op naam (jouw code behouden)
+        // 🔍 zoeken op naam
         if ($zoek) {
             $sql .= " AND naam LIKE ?";
             $params[] = "%$zoek%";

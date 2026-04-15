@@ -31,8 +31,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             $sql = "UPDATE lessen SET naam=?, datum=?, tijd=?, prijs=? WHERE id=?";
+<<<<<<< HEAD
            // $sql = "UPDATE bestaat_niet SET naam=? WHERE id=?"; // ❌ foutieve query voor testing
 
+=======
+            //$sql = "UPDATE bestaat_niet SET naam=? WHERE id=?"; //  test foutmelding
+>>>>>>> feature/bestaande-les-wijzigen
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$naam, $datum, $tijd, $prijs, $id]);
 
