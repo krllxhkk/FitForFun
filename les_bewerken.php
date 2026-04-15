@@ -9,7 +9,7 @@ $stmt->execute([$id]);
 $les = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $fout = '';
-$dbError = ''; // 👈 echte database error
+$dbError = ''; // echte database error
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $today = date("Y-m-d");
 
-    // ✅ VALIDATIE (unhappy scenario)
+    // ✅ VALIDATIE
     if (empty($naam) || empty($datum) || empty($tijd) || empty($prijs)) {
         $fout = "Vul alle velden in!";
     } elseif ($prijs < 0) {
@@ -31,12 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             $sql = "UPDATE lessen SET naam=?, datum=?, tijd=?, prijs=? WHERE id=?";
-<<<<<<< HEAD
-           // $sql = "UPDATE bestaat_niet SET naam=? WHERE id=?"; // ❌ foutieve query voor testing
 
-=======
-            //$sql = "UPDATE bestaat_niet SET naam=? WHERE id=?"; //  test foutmelding
->>>>>>> feature/bestaande-les-wijzigen
+            // ❌ TEST (alleen gebruiken als je database error wil zien)
+            // $sql = "UPDATE bestaat_niet SET naam=? WHERE id=?";
+
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$naam, $datum, $tijd, $prijs, $id]);
 
@@ -44,10 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         } catch (PDOException $e) {
 
-            // ✅ nette melding voor gebruiker
+            // nette fout voor gebruiker
             $fout = "Er is een probleem met de database. Probeer later opnieuw.";
 
-            // ✅ echte error voor docent
+            // echte fout voor docent (debug)
             $dbError = $e->getMessage();
         }
     }
@@ -63,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p style="color:red;"><?= $fout ?></p>
     <?php endif; ?>
 
-    <!-- ❗ echte database fout (voor docent) -->
+    <!-- ❗ echte database fout -->
     <?php if ($dbError): ?>
         <p style="color:orange;">DEBUG: <?= $dbError ?></p>
     <?php endif; ?>
@@ -71,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form method="POST" class="les-form">
 
         <label>Les naam</label>
-        <input type="text" name="naam" value="<?= $les['naam'] ?>">
+        <input type="text" name="naam" value="<?= htmlspecialchars($les['naam']) ?>">
 
         <label>Datum</label>
         <input type="date" name="datum" value="<?= $les['datum'] ?>">
