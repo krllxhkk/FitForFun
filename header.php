@@ -10,9 +10,7 @@
 </head>
 
 <body>
-
     <header>
-
         <h1>💪 FitForFun</h1>
 
         <div class="hamburger" onclick="toggleMenu()">

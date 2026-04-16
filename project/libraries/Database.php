@@ -27,10 +27,14 @@ class Database {
         $this->stmt->bindValue($param,$value);
     }
 
-    public function execute()
-    {
+   public function execute()
+{
+    try {
         return $this->stmt->execute();
+    } catch (PDOException $e) {
+        throw new Exception($e->getMessage());
     }
+}
 
     public function resultSet()
     {

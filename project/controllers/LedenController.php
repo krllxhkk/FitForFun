@@ -40,21 +40,47 @@ class LedenController extends BaseController {
 
     public function add()
 {
+    // Nieuw lid toevoegen
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $data = [
             'naam' => trim($_POST['naam']),
             'email' => trim($_POST['email']),
             'telefoon' => trim($_POST['telefoon']),
-            'created_at' => date('Y-m-d')
+            'created_at' => date('Y-m-d'),
+            'fout' => ''
         ];
 
-        $this->lidModel->addLid($data);
+        // Basis validatie
+        if (empty($data['naam'])) {
+            $data['fout'] = 'Naam is verplicht.';
+        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $data['fout'] = 'Voer een geldig e-mailadres in.';
+        }
 
-        header('Location: ' . URLROOT . '/public/index.php?url=leden/index');
-        exit;
+        // Bij validatiefout terug naar overzicht
+        if (!empty($data['fout'])) {
+            $data['leden'] = $this->lidModel->getLeden();
+            $this->view('leden', $data);
+            return;
+        }
+
+        try {
+    // Proberen om data op te slaan
+    $this->lidModel->addLid($data);
+
+    header('Location: ' . URLROOT . '/public/index.php?url=leden/index');
+    exit;
+
+} catch (Exception $e) {
+    // Vriendelijke foutmelding tonen
+    $data['fout'] = 'De gegevens konden niet worden opgeslagen door een databasefout.';
+    $data['leden'] = $this->lidModel->getLeden();
+
+    $this->view('leden', $data);
+    return;
+}
     }
 }
-
     public function delete($id)
     {
         $this->lidModel->deleteLid($id);
@@ -81,28 +107,62 @@ exit;
     $this->view('leden_overzicht', $data);
 }
 
-    public function edit($id)
+public function edit($id)
 {
+    // Bewerken van medewerker
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
         $data = [
             'id' => $id,
             'naam' => trim($_POST['naam']),
+            'functie' => trim($_POST['functie']),
             'email' => trim($_POST['email']),
-            'telefoon' => trim($_POST['telefoon'])
+            'telefoon' => trim($_POST['telefoon']),
+            'fout' => ''
         ];
 
-        $this->lidModel->updateLid($data);
+        try {
+            // Proberen om wijzigingen op te slaan
+            $this->medewerkerModel->updateMedewerker($data);
 
-        header('Location: ' . URLROOT . '/public/index.php?url=leden/index');
-        exit;
+            header('Location: ' . URLROOT . '/public/index.php?url=medewerker/index');
+            exit;
+
+        } catch (Exception $e) {
+            // Fout netjes tonen op de pagina
+            $data['fout'] = 'De medewerker kon niet worden bijgewerkt door een databasefout.';
+            $data['medewerker'] = (object)$data;
+
+            $this->view('medewerker_edit', $data);
+            return;
+        }
+
     } else {
-        $lid = $this->lidModel->getLidById($id);
+        try {
+            // Gegevens ophalen voor edit pagina
+            $medewerker = $this->medewerkerModel->getMedewerkerById($id);
 
-        $data = [
-            'lid' => $lid
-        ];
+            $data = [
+                'medewerker' => $medewerker,
+                'fout' => ''
+            ];
 
-        $this->view('leden_edit', $data);
+            $this->view('medewerker_edit', $data);
+
+        } catch (Exception $e) {
+            // Fout bij laden (bijv. ontbrekende kolom)
+            $data = [
+                'fout' => 'Gegevens konden niet worden geladen door een databasefout.',
+                'medewerker' => (object)[
+                    'naam' => '',
+                    'functie' => '',
+                    'email' => '',
+                    'telefoon' => ''
+                ]
+            ];
+
+            $this->view('medewerker_edit', $data);
+        }
     }
 }
 }

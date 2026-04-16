@@ -9,6 +9,13 @@
 
 <section class="crud-section">
     <h2>Nieuwe medewerker toevoegen</h2>
+    <?php if (!empty($data['fout'])): ?>
+    <!-- Foutmelding tonen -->
+    <div class="alert-box">
+        <h3>Fout</h3>
+        <p><?php echo htmlspecialchars($data['fout']); ?></p>
+    </div>
+<?php endif; ?>
 
     <form method="POST" class="crud-form" action="<?php echo URLROOT; ?>/public/index.php?url=medewerker/add">
         <input type="text" name="naam" placeholder="Naam" required>
