@@ -8,43 +8,81 @@ $stmt = $pdo->prepare("SELECT * FROM lessen WHERE id = ?");
 $stmt->execute([$id]);
 $les = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+$fout = '';
+$dbError = ''; // echte database error
 
-$naam = $_POST['naam'];
-$datum = $_POST['datum'];
-$tijd = $_POST['tijd'];
-$prijs = $_POST['prijs'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-$sql = "UPDATE lessen SET naam=?, datum=?, tijd=?, prijs=? WHERE id=?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$naam,$datum,$tijd,$prijs,$id]);
+    $naam = $_POST['naam'];
+    $datum = $_POST['datum'];
+    $tijd = $_POST['tijd'];
+    $prijs = $_POST['prijs'];
 
-header("Location: lessen_overzicht.php");
-exit;
+    $today = date("Y-m-d");
+
+    // ✅ VALIDATIE
+    if (empty($naam) || empty($datum) || empty($tijd) || empty($prijs)) {
+        $fout = "Vul alle velden in!";
+    } elseif ($prijs < 0) {
+        $fout = "Prijs mag niet negatief zijn!";
+    } elseif ($datum < $today) {
+        $fout = "Er is iets mis gegaan, probeer later opnieuw.";
+    } else {
+
+        try {
+            $sql = "UPDATE lessen SET naam=?, datum=?, tijd=?, prijs=? WHERE id=?";
+
+            // ❌ TEST (alleen gebruiken als je database error wil zien)
+            // $sql = "UPDATE bestaat_niet SET naam=? WHERE id=?";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$naam, $datum, $tijd, $prijs, $id]);
+
+            header("Location: lessen_overzicht.php");
+            exit;
+        } catch (PDOException $e) {
+
+            // nette fout voor gebruiker
+            $fout = "Er is een probleem met de database. Probeer later opnieuw.";
+
+            // echte fout voor docent (debug)
+            $dbError = $e->getMessage();
+        }
+    }
 }
 ?>
 
 <section class="form-pagina">
 
-<h2>✏️ Les Bewerken</h2>
+    <h2>✏️ Les Bewerken</h2>
 
-<form method="POST" class="les-form">
+    <!-- ❗ nette fout -->
+    <?php if ($fout): ?>
+        <p style="color:red;"><?= $fout ?></p>
+    <?php endif; ?>
 
-<label>Les naam</label>
-<input type="text" name="naam" value="<?= $les['naam'] ?>" required>
+    <!-- ❗ echte database fout -->
+    <?php if ($dbError): ?>
+        <p style="color:orange;">DEBUG: <?= $dbError ?></p>
+    <?php endif; ?>
 
-<label>Datum</label>
-<input type="date" name="datum" value="<?= $les['datum'] ?>" required>
+    <form method="POST" class="les-form">
 
-<label>Tijd</label>
-<input type="time" name="tijd" value="<?= $les['tijd'] ?>" required>
+        <label>Les naam</label>
+        <input type="text" name="naam" value="<?= htmlspecialchars($les['naam']) ?>">
 
-<label>Prijs</label>
-<input type="number" step="0.01" name="prijs" value="<?= $les['prijs'] ?>" required>
+        <label>Datum</label>
+        <input type="date" name="datum" value="<?= $les['datum'] ?>">
 
-<button type="submit" class="btn">Les opslaan</button>
+        <label>Tijd</label>
+        <input type="time" name="tijd" value="<?= $les['tijd'] ?>">
 
-</form>
+        <label>Prijs</label>
+        <input type="number" step="0.01" name="prijs" value="<?= $les['prijs'] ?>">
+
+        <button type="submit" class="btn">Les opslaan</button>
+
+    </form>
 
 </section>
 
