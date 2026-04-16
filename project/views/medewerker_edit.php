@@ -8,6 +8,12 @@
 
 <section class="crud-section">
     <h2>Gegevens aanpassen</h2>
+    <?php if (!empty($data['fout'])): ?>
+    <div class="alert-box">
+        <h3>Fout</h3>
+        <p><?php echo htmlspecialchars($data['fout']); ?></p>
+    </div>
+<?php endif; ?>
 
     <form method="POST" class="crud-form">
         <input type="text" name="naam" value="<?php echo $data['medewerker']->naam; ?>" required>

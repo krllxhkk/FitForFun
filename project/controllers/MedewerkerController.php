@@ -21,22 +21,35 @@ class MedewerkerController extends BaseController {
     }
 
     public function add()
-    {
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+{
+    // Nieuwe medewerker toevoegen
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $data = [
-                'naam' => $_POST['naam'],
-                'functie' => trim($_POST['functie']),
-                'email' => $_POST['email'],
-                'telefoon' => $_POST['telefoon']
-            ];
+        $data = [
+            'naam' => trim($_POST['naam']),
+            'functie' => trim($_POST['functie']),
+            'email' => trim($_POST['email']),
+            'telefoon' => trim($_POST['telefoon']),
+            'fout' => ''
+        ];
 
+        try {
+            // Proberen om medewerker op te slaan
             $this->medewerkerModel->addMedewerker($data);
 
             header('Location: ' . URLROOT . '/public/index.php?url=medewerker/index');
-exit;
+            exit;
+
+        } catch (Exception $e) {
+            // Vriendelijke foutmelding tonen
+            $data['fout'] = 'De medewerker kon niet worden opgeslagen door een databasefout.';
+            $data['medewerkers'] = $this->medewerkerModel->getMedewerkers();
+
+            $this->view('medewerkers', $data);
+            return;
         }
     }
+}
 
     public function delete($id)
     {

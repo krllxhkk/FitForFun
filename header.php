@@ -16,14 +16,14 @@
 
 <body>
 
-<header>
+<!-- <header>
     <h1>💪 FitForFun</h1>
     <nav>
         <a href="/FITFORFUN/public/index.php">Home</a>
         <a href="/FITFORFUN/public/lessen.php">Lessen</a>
         <a href="/FITFORFUN/public/inloggen.php">Inloggen</a>
     </nav>
-</header>
+</header> -->
 
 <h1>💪 FitForFun</h1>
 
