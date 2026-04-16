@@ -2,50 +2,87 @@
 include "database.php";
 include "header.php";
 
-$stmt = $pdo->query("SELECT * FROM lessen");
-$lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$fout = '';
+$lessen = [];
+
+try {
+    $stmt = $pdo->query("SELECT * FROM lessen");
+    $lessen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $fout = "Er is iets mis gegaan, probeer later opnieuw.";
+}
 ?>
 
-<h2 style="text-align:center;">Lessen Overzicht</h2>
+<main>
 
-<div style="text-align:center; margin-top:20px;">
-<a href="les_toevoegen.php" class="btn">➕ Nieuwe les toevoegen</a>
-</div>
+    <h2 style="text-align:center;">Lessen Overzicht</h2>
 
-<table class="lessen-tabel">
+    <!-- ➕ Nieuwe les -->
+    <div style="text-align:center; margin-top:20px;">
+        <a href="les_toevoegen.php" class="btn">➕ Nieuwe les toevoegen</a>
+    </div>
 
-<tr>
-<th>Naam</th>
-<th>Datum</th>
-<th>Tijd</th>
-<th>Prijs</th>
-<th>Acties</th>
-</tr>
+    <!-- ❗ FOUTMELDING -->
+    <?php if (!empty($fout)): ?>
+        <div style="background:#e74c3c; padding:12px; border-radius:8px; color:white; text-align:center; margin:20px;">
+            ⚠️ <?= $fout ?>
+        </div>
+    <?php endif; ?>
 
-<?php foreach($lessen as $les): ?>
+    <table class="lessen-tabel">
 
-<tr>
+        <tr>
+            <th>Naam</th>
+            <th>Datum</th>
+            <th>Tijd</th>
+            <th>Prijs</th>
+            <th>Acties</th>
+        </tr>
 
-<td><?= htmlspecialchars($les['naam']) ?></td>
+        <?php if (!empty($lessen)): ?>
 
-<td><?= date("d-m-Y", strtotime($les['datum'])) ?></td>
+            <?php foreach ($lessen as $les): ?>
 
-<td><?= date("H:i", strtotime($les['tijd'])) ?></td>
+                <tr>
 
-<td>€<?= number_format($les['prijs'],2) ?></td>
+                    <td><?= htmlspecialchars($les['naam']) ?></td>
 
-<td class="actie">
+                    <td><?= date("d-m-Y", strtotime($les['datum'])) ?></td>
 
-<a class="bewerken" href="les_bewerken.php?id=<?= $les['id'] ?>">Bewerken</a>
+                    <td><?= date("H:i", strtotime($les['tijd'])) ?></td>
 
-<a class="verwijderen" href="les_verwijderen.php?id=<?= $les['id'] ?>">Verwijderen</a>
+                    <td>€<?= number_format($les['prijs'], 2) ?></td>
 
-</td>
+                    <td class="actie">
 
-</tr>
+                        <a class="bewerken" href="les_bewerken.php?id=<?= $les['id'] ?>">
+                            Bewerken
+                        </a>
 
-<?php endforeach; ?>
+                        <a class="verwijderen"
+                            href="les_verwijderen.php?id=<?= $les['id'] ?>"
+                            onclick="return confirm('Weet je zeker dat je wilt verwijderen?')">
+                            Verwijderen
+                        </a>
 
-</table>
+                    </td>
+
+                </tr>
+
+            <?php endforeach; ?>
+
+        <?php else: ?>
+
+            <tr>
+                <td colspan="5" style="text-align:center; padding:20px;">
+                    Geen lessen gevonden
+                </td>
+            </tr>
+
+        <?php endif; ?>
+
+    </table>
+
+</main>
 
 <?php include "footer.php"; ?>
